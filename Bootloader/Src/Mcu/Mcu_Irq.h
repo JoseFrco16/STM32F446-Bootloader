@@ -1,21 +1,19 @@
 /**
  ******************************************************************************
- * @file       Irq_handler.c
+ * @file       MCU_Irq.c
  * @brief      Handlers used by Bootloader Irqs
  * @name       JoseFrco16
  *******************************************************************************/
 
-#ifndef IRQ_HANDLER__H
-#define IRQ_HANDLER__H
+#ifndef MCU_IRQ__H
+#define MCU_IRQ__H
 
 /* Includes ------------------------------------------------------------------ */
 #include <stdint.h>
 
-/* Typedef -------------------------------------------------------------------*/
-
 /* Define --------------------------------------------------------------------*/
 
-/* Private variables ---------------------------------------------------------*/
+/* Typedef -------------------------------------------------------------------*/
 
 /* Public function prototypes ------------------------------------------------*/
 
@@ -30,4 +28,4 @@ void Error_Handler(void);
  */
 void SysTick_Handler(void);
 
-#endif /* IRQ_HANDLER__H */
+#endif /* MCU_IRQ__H */

@@ -1,24 +1,30 @@
 /**
  ******************************************************************************
- * @file       Gpio.c
- * @brief      Gpio configurations
+ * @file       Ver.h
+ * @brief      Bootloader version manager
  * @name       JoseFrco16
  *******************************************************************************/
 
-#ifndef GPIO__H
-#define GPIO__H
+#ifndef VER__H
+#define VER__H
 
 /* Includes ------------------------------------------------------------------ */
 #include <stdint.h>
 
 /* Define --------------------------------------------------------------------*/
+#define FW_VERSION_MAJOR   1
+#define FW_VERSION_MINOR   0
+#define FW_VERSION_PATCH   0
+
+#define FW_VERSION_U32 ((FW_VERSION_MAJOR << 16) | \
+                        (FW_VERSION_MINOR << 8)  | \
+                        (FW_VERSION_PATCH))
 
 /* Typedef -------------------------------------------------------------------*/
 
-/* Public function prototypes ------------------------------------------------*/
-/**
- * @brief Gpio initialization required for bootloader
- */
-void Gpio_Init();
+/* Public variables ----------------------------------------------------------*/
+extern uint32_t Ver_FwVersion;
 
-#endif /* GPIO__H */
+/* Public function prototypes ------------------------------------------------*/
+
+#endif /* VER__H */

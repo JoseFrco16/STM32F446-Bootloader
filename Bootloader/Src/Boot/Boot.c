@@ -6,16 +6,30 @@
 
 /* Includes ------------------------------------------------------------------ */
 #include "Boot.h"
+#include "Uart.h"
 #include "stm32f4xx_hal.h"
+#include "stdio.h"
+
+/* Define --------------------------------------------------------------------*/
+#define BOOT_APP_START_ADDR 0x08008000
+
+/* Enum  ----------------------------------------------------------------------*/
+enum Boot_Cmd{
+	PING = 0,
+	BOOT_VERSION,
+	DEVICE_INFO,
+	ERASE_FLASH,
+	WRITE_FLASH,
+	COMPUTE_CRC,
+	AUTHENTICATE,
+	UNLOCK,
+	JUMP_TO_APPLICATION,
+	MCU_RESET,
+};
 
 /* Typedef -------------------------------------------------------------------*/
 typedef void (*pAppRestHandler)(void);
 
-/* Define --------------------------------------------------------------------*/
-#define BOOT_APP0_START_ADDR 0x08008000
-#define BOOT_APP1_START_ADDR 0x08010000
-#define BOOT_APP0_FLAG       0u
-#define BOOT_APP1_FLAG       1u
 
 /* Private variables ---------------------------------------------------------*/
 /* Private RAM Variable stored in .noinit section */
@@ -23,32 +37,67 @@ __attribute__((section(".noinit")))  uint8_t Boot_AppFlag;
 
 /* Private function prototypes -----------------------------------------------*/
 /**
- * @brief Jump to the Application 0 stored in BOOT_APP0_START_ADDR
+ * @brief Jump to Application stored in BOOT_APP_START_ADDR
  */
-void Boot_JumpToApp0(void);
-
-/**
- * @brief Jump to the Application 1 stored in BOOT_APP1_START_ADDR
- */
-void Boot_JumpToApp1(void);
+void Boot_JumpToApp(void);
 
 /* Public Functions  ---------------------------------------------------------*/
-void Boot_ManageBootloaderJumps(void)
+void Boot_ManageBootloader( void )
 {
-	if (Boot_AppFlag == BOOT_APP0_FLAG)
+	if( Boot_AppFlag == True )
 	{
-		Boot_AppFlag = BOOT_APP1_FLAG;
-		Boot_JumpToApp0();
+
 	}
-	else if (Boot_AppFlag == BOOT_APP1_FLAG)
+}
+
+
+void Boot_ExecuteBootloaderCmdAction( int8_t cmd )
+{
+	switch( cmd )
 	{
-		Boot_AppFlag = BOOT_APP0_FLAG;
-		Boot_JumpToApp1();
-	}
-	else
-	{
-		Boot_AppFlag = BOOT_APP1_FLAG;
-		Boot_JumpToApp0();
+	case PING:
+		printf("Ping");
+		break;
+
+	case BOOT_VERSION:
+
+		printf("Boot Version");
+		break;
+
+	case DEVICE_INFO:
+
+		break;
+
+	case ERASE_FLASH:
+
+		break;
+
+	case WRITE_FLASH:
+
+		break;
+
+	case COMPUTE_CRC:
+
+		break;
+
+	case AUTHENTICATE:
+
+		break;
+
+	case UNLOCK:
+
+		break;
+
+	case JUMP_TO_APPLICATION:
+
+		break;
+
+	case MCU_RESET:
+
+		break;
+
+	default:
+		break;
 	}
 }
 
@@ -64,10 +113,10 @@ void Boot_LedSequence(void)
 }
 
 /* Private Functions  ---------------------------------------------------------*/
-void Boot_JumpToApp0(void)
+void Boot_JumpToApp(void)
 {
-	uint32_t appStack = *(__IO uint32_t*) BOOT_APP0_START_ADDR;
-	uint32_t appResetHandler = *(__IO uint32_t*) (BOOT_APP0_START_ADDR + 4);
+	uint32_t appStack = *(__IO uint32_t*) BOOT_APP_START_ADDR;
+	uint32_t appResetHandler = *(__IO uint32_t*) (BOOT_APP_START_ADDR + 4);
 
 	HAL_RCC_DeInit();
 	HAL_DeInit();
@@ -78,7 +127,7 @@ void Boot_JumpToApp0(void)
 	SysTick->VAL = 0;
 
 	/* Set vector table */
-	SCB->VTOR = BOOT_APP0_START_ADDR;
+	SCB->VTOR = BOOT_APP_START_ADDR;
 
 	/* Set Main Stack Pointer */
 	__set_MSP(appStack);
@@ -88,26 +137,3 @@ void Boot_JumpToApp0(void)
 	JumpToApplication();
 }
 
-void Boot_JumpToApp1(void)
-{
-	uint32_t appStack = *(__IO uint32_t*) BOOT_APP1_START_ADDR;
-	uint32_t appResetHandler = *(__IO uint32_t*) (BOOT_APP1_START_ADDR + 4);
-
-	HAL_RCC_DeInit();
-	HAL_DeInit();
-
-	/* Disable SysTick */
-	SysTick->CTRL = 0;
-	SysTick->LOAD = 0;
-	SysTick->VAL = 0;
-
-	/* Set vector table */
-	SCB->VTOR = BOOT_APP1_START_ADDR;
-
-	/* Set Main Stack Pointer */
-	__set_MSP(appStack);
-
-	/* Jump to Reset Handler of App1 */
-	pAppRestHandler JumpToApplication = (pAppRestHandler) appResetHandler;
-	JumpToApplication();
-}

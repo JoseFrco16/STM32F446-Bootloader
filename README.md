@@ -2,6 +2,37 @@
 
 Bootloader is a small programm that runs before the main application on a microcontroller. Its main purpose is to manage the process of updating or loading new firmware to the device without needing external programming tools. The bootloader could receive the new application through communication interfaces like UART, CAN, SPI, WIFI, etc and store it in the microcontroller's flash memory. After that, the bootloader transfers control to the application.    
 
+## Commands  
+
++ Ping
++ Get Version  
++ Get Device Info
+
++ Erase Flash   
++ Write Flash   
+
++ Compute CRC
++ Authenticate 
++ Unlock  
+
++ Jump to Application
++ Reset
+
+## Interfaces  
+
+### Uart  
+
++ Bootloader: Uart using polling (simple, more control)
++ Application: Uart using Irq
+
+Configuration: 
+
++ Even parity (1 bit)
++ Payload (8 bits)
++ Stop bit (1)
++ Oversampling to avoid errors
+
+
 ## Version 1.0.0
 
 It is an initial approach to the bootloader where the goal is to jump between APP0 and APP1 when User button is press, so in this case the bootloader doesn't manage any remote upgrade. This version contains the tree application stored in memory.

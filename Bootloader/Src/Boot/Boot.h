@@ -10,20 +10,22 @@
 
 /* Includes ------------------------------------------------------------------ */
 #include <stdint.h>
-
-/* Typedef -------------------------------------------------------------------*/
+#include "Types.h"
 
 /* Define --------------------------------------------------------------------*/
 
-/* Private variables ---------------------------------------------------------*/
+/* Typedef -------------------------------------------------------------------*/
 
 /* Public function prototypes ------------------------------------------------*/
 
 /**
- * @brief Manage jumps between applications
+ * @brief Manage bootloader commands
  */
-void Boot_ManageBootloaderJumps(void);
+void Boot_ManageBootloaderCmd( int8_t cmd );
 
+/**
+ * @brief Manage bootloader led sequence
+ */
 void Boot_LedSequence(void);
 
 #endif /* BOOT__H */

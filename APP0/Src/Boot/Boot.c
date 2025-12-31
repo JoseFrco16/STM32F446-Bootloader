@@ -8,11 +8,11 @@
 #include "Boot.h"
 #include "stm32f4xx_hal.h"
 
-/* Typedef -------------------------------------------------------------------*/
-typedef void (*pAppRestHandler)(void);
-
 /* Define --------------------------------------------------------------------*/
 #define BOOT_BOOTLOADER_START_ADDR  0x8000000
+
+/* Typedef -------------------------------------------------------------------*/
+typedef void (*pAppRestHandler)(void);
 
 /* Private variables ---------------------------------------------------------*/
 

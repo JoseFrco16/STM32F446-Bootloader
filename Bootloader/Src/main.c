@@ -2,7 +2,7 @@
  ******************************************************************************
  * @file       main.c
  * @brief      Main bootloader file
- * @name       Jose Francisco Marti Martin
+ * @name       JoseFrco16
  *******************************************************************************/
 
 /* Includes ------------------------------------------------------------------ */
@@ -10,17 +10,17 @@
 #include "Boot.h"
 #include "Gpio.h"
 #include "Mcu.h"
-#include "Irq_handler.h"
-
-/* Typedef -------------------------------------------------------------------*/
+#include "Uart.h"
 
 /* Define --------------------------------------------------------------------*/
+
+/* Typedef -------------------------------------------------------------------*/
 
 /* Private variables ---------------------------------------------------------*/
 
 /* Private function prototypes -----------------------------------------------*/
 
-/* Function prototypes  ------------------------------------------------------*/
+/* Function definitions ------------------------------------------------------*/
 
 /**
  * @brief  The application entry point.
@@ -32,12 +32,16 @@ int main(void)
 	Mcu_Init();
 
 	Gpio_Init();
+	Uart_Init();
 
 	Boot_LedSequence();
-	Boot_ManageBootloaderJumps();
+	uint8_t msg[] = "Hola\r\n";
+
+	//Boot_ManageBootloaderJumps();
 
 	while (1)
 	{
-
+		Uart_WriteFrame(msg, 6);
+		HAL_Delay(1000);
 	}
 }
