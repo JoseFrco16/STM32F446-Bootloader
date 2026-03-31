@@ -36,7 +36,7 @@
 ENTRY(Reset_Handler)														/* Program Entry Point -> The program start to executed at Reset_Handler*/
 
 /* Highest address of the user mode stack */
-_estack = ORIGIN(RAM) + 16K; /* end of "RAM" Ram type memory */
+_estack = ORIGIN(RAM_BOOT) + 16K; /* end of "RAM_BOOT" Ram type memory */
 
 _Min_Heap_Size = 0x200; /* required amount of heap */
 _Min_Stack_Size = 0x400; /* required amount of stack */
@@ -44,30 +44,33 @@ _Min_Stack_Size = 0x400; /* required amount of stack */
 /* Memories definition */
 MEMORY
 {
-  RAM    (xrw)    : ORIGIN = 0x20000000,   LENGTH = 16K
-  FLASH    (rx)    : ORIGIN = 0x8000000,   LENGTH = 32K
+  RAM_BOOT            (r)    : ORIGIN = 0x20000000,   LENGTH = 16K
+  RAM_APP             (xrw)  : ORIGIN = 0x20004000,   LENGTH = 16K
+  FLASH_BOOT          (r)    : ORIGIN = 0x8000000,   LENGTH = 32K
+  FLASH_APP_HEADER    (rx)   : ORIGIN = 0x8008000,   LENGTH = 1K
+  FLASH_APP           (rx)   : ORIGIN = 0x8008400,   LENGTH = 31K
 }
 
 /* Sections */
 SECTIONS																	/* All the sections are aligned 4 bytes to comply with ARM Arquitecture and avoid bus fault */
 {
 
-  /* The startup code into "FLASH" Rom type memory */
+  /* The startup code into "FLASH_BOOT" Rom type memory */
   .isr_vector :
   {
     . = ALIGN(4);
     KEEP(*(.isr_vector)) /* Startup code */
     . = ALIGN(4);
-  } >FLASH
+  } >FLASH_BOOT
 
 	.noinit (NOLOAD) :
 	{
 	  . = ALIGN(4);
 	  *(.noinit*)
 	  . = ALIGN(4);
-	} >RAM
+	} >RAM_BOOT
 
-  /* The program code and other data into "FLASH" Rom type memory */
+  /* The program code and other data into "FLASH_BOOT" Rom type memory */
   .text :
   {
     . = ALIGN(4);
@@ -82,23 +85,23 @@ SECTIONS																	/* All the sections are aligned 4 bytes to comply with 
 
     . = ALIGN(4);
     _etext = .;        /* define a global symbols at end of code */
-  } >FLASH
+  } >FLASH_BOOT
 
-  /* Constant data into "FLASH" Rom type memory */
+  /* Constant data into "FLASH_BOOT" Rom type memory */
   .rodata :
   {
     . = ALIGN(4);
     *(.rodata)         /* .rodata sections (constants, strings, etc.) */
     *(.rodata*)        /* .rodata* sections (constants, strings, etc.) */
     . = ALIGN(4);
-  } >FLASH
+  } >FLASH_BOOT
 
   .ARM.extab (READONLY) : /* The "READONLY" keyword is only supported in GCC11 and later, remove it if using GCC10 or earlier. */
   {
     . = ALIGN(4);
     *(.ARM.extab* .gnu.linkonce.armextab.*)
     . = ALIGN(4);
-  } >FLASH
+  } >FLASH_BOOT
 
   .ARM (READONLY) : /* The "READONLY" keyword is only supported in GCC11 and later, remove it if using GCC10 or earlier. */
   {
@@ -107,7 +110,7 @@ SECTIONS																	/* All the sections are aligned 4 bytes to comply with 
     *(.ARM.exidx*)
     __exidx_end = .;
     . = ALIGN(4);
-  } >FLASH
+  } >FLASH_BOOT
 
   .preinit_array (READONLY) : /* The "READONLY" keyword is only supported in GCC11 and later, remove it if using GCC10 or earlier. */
   {
@@ -116,7 +119,7 @@ SECTIONS																	/* All the sections are aligned 4 bytes to comply with 
     KEEP (*(.preinit_array*))
     PROVIDE_HIDDEN (__preinit_array_end = .);
     . = ALIGN(4);
-  } >FLASH
+  } >FLASH_BOOT
 
   .init_array (READONLY) : /* The "READONLY" keyword is only supported in GCC11 and later, remove it if using GCC10 or earlier. */
   {
@@ -126,7 +129,7 @@ SECTIONS																	/* All the sections are aligned 4 bytes to comply with 
     KEEP (*(.init_array*))
     PROVIDE_HIDDEN (__init_array_end = .);
     . = ALIGN(4);
-  } >FLASH
+  } >FLASH_BOOT
 
   .fini_array (READONLY) : /* The "READONLY" keyword is only supported in GCC11 and later, remove it if using GCC10 or earlier. */
   {
@@ -136,12 +139,12 @@ SECTIONS																	/* All the sections are aligned 4 bytes to comply with 
     KEEP (*(.fini_array*))
     PROVIDE_HIDDEN (__fini_array_end = .);
     . = ALIGN(4);
-  } >FLASH
+  } >FLASH_BOOT
 
   /* Used by the startup to initialize data */
   _sidata = LOADADDR(.data);
 
-  /* Initialized data sections into "RAM" Ram type memory */
+  /* Initialized data sections into "RAM_BOOT" Ram type memory */
   .data :
   {
     . = ALIGN(4);
@@ -154,9 +157,9 @@ SECTIONS																	/* All the sections are aligned 4 bytes to comply with 
     . = ALIGN(4);
     _edata = .;        /* define a global symbol at data end */
 
-  } >RAM AT> FLASH
+  } >RAM_BOOT AT> FLASH_BOOT
 
-  /* Uninitialized data section into "RAM" Ram type memory */
+  /* Uninitialized data section into "RAM_BOOT" Ram type memory */
   . = ALIGN(4);
   .bss :
   {
@@ -170,9 +173,9 @@ SECTIONS																	/* All the sections are aligned 4 bytes to comply with 
     . = ALIGN(4);
     _ebss = .;         /* define a global symbol at bss end */
     __bss_end__ = _ebss;
-  } >RAM
+  } >RAM_BOOT
 
-  /* User_heap_stack section, used to check that there is enough "RAM" Ram  type memory left */
+  /* User_heap_stack section, used to check that there is enough "RAM_BOOT" Ram  type memory left */
   ._user_heap_stack :
   {
     . = ALIGN(8);
@@ -181,7 +184,7 @@ SECTIONS																	/* All the sections are aligned 4 bytes to comply with 
     . = . + _Min_Heap_Size;
     . = . + _Min_Stack_Size;
     . = ALIGN(8);
-  } >RAM
+  } >RAM_BOOT
 
   /* Remove information from the compiler libraries */
   /DISCARD/ :

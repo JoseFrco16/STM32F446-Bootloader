@@ -6,12 +6,12 @@
 
 /* Includes ------------------------------------------------------------------ */
 #include "Mcu.h"
-
 #include "stm32f4xx_hal.h"
 
 /* Define --------------------------------------------------------------------*/
 
 /* Typedef -------------------------------------------------------------------*/
+typedef void (*pAppRestHandler)(void);
 
 /* Public variables ----------------------------------------------------------*/
 
@@ -29,6 +29,36 @@ void Mcu_Init()
 {
 	HAL_Init();
 	SystemClock_Config();
+}
+
+void Mcu_JumpToApp( uint32_t AppAddress )
+{
+	/* TODO: Move this to PAL */
+	uint32_t appStack = *(volatile uint32_t*) AppAddress;
+	uint32_t appResetHandler = *(volatile uint32_t*) (AppAddress + 4);
+
+	HAL_RCC_DeInit();
+	HAL_DeInit();
+
+	/* Disable SysTick */
+	SysTick->CTRL = 0;
+	SysTick->LOAD = 0;
+	SysTick->VAL = 0;
+
+	/* Set vector table */
+	SCB->VTOR = AppAddress;
+
+	/* Set Main Stack Pointer */
+	__set_MSP(appStack);
+
+	/* Jump to Reset Handler of App0 */
+	pAppRestHandler JumpToApplication = (pAppRestHandler) appResetHandler;
+	JumpToApplication();
+}
+
+void Mcu_Reset()
+{
+	NVIC_SystemReset();
 }
 
 /* Private Functions  ---------------------------------------------------------*/

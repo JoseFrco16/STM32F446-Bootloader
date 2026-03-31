@@ -9,22 +9,15 @@
 #include "Boot_Handlers.h"
 #include "Boot_Protocol.h"
 #include "Ver.h"
+#include "Mcu.h"
 #include "Types.h"
-#include "stm32f4xx_hal.h"
 
 /* Define --------------------------------------------------------------------*/
 #define BOOT_APP_START_ADDR 0x08008000u
 
 /* Enum  ----------------------------------------------------------------------*/
-enum Boot_Status{
-	OK = 0,
-	ERROR_GENERIC,
-	ERROR_CRC,
-	ERROR_MEMORY_ADDRESS
-};
 
 /* Typedef -------------------------------------------------------------------*/
-typedef void (*pAppRestHandler)(void);
 typedef void (*Boot_CmdHandler_t)(void);
 
 /* Public variables ----------------------------------------------------------*/
@@ -87,7 +80,7 @@ static void Boot_CmdMcuResetHandler( void );
  * @brief  Jump to application handler.
  *         It should return ACK and jump to application.
  */
-static void Boot_JumpToAppHandler( void );
+static void Boot_CmdJumpToAppHandler( void );
 
 /* Private variables ---------------------------------------------------------*/
 Boot_CmdHandler_t Boot_CmdHandlerPtr[ CMD_TOTAL ] =
@@ -100,37 +93,41 @@ Boot_CmdHandler_t Boot_CmdHandlerPtr[ CMD_TOTAL ] =
 	[ COMPUTE_CRC ] = Boot_CmdComputeCrcHandler,
 	[ AUTHENTICATE ] = Boot_CmdAuthenticateHandler,
 	[ UNLOCK ] = Boot_CmdUnlockHandler,
-	[ JUMP_TO_APPLICATION ] = Boot_CmdMcuResetHandler,
+	[ JUMP_TO_APPLICATION ] = Boot_CmdJumpToAppHandler,
 	[ MCU_RESET ] = Boot_CmdMcuResetHandler,
 };
 
 /* Public Functions  ---------------------------------------------------------*/
-void Boot_ExecuteCmd( Boot_CmdType Cmd )
+uint8_t Boot_ExecuteCmd( Boot_RxProtocolType* RxProtocolFrame )
 {
-	uint8_t error;
+	uint8_t finish_flag = False;
 
-	if( ( Cmd >= CMD_TOTAL ) || ( Boot_CmdHandlerPtr[ Cmd ] == NULL ) )
+	if( ( RxProtocolFrame == NULL ) ||
+		( RxProtocolFrame->Cmd >= CMD_TOTAL ) ||
+		( Boot_CmdHandlerPtr[ RxProtocolFrame->Cmd ] == NULL ) )
 	{
-		// NACK
+		Boot_SendCmd( 0u, 0u, ERROR_RX_FRAME );
 	}
 	else
 	{
-		Boot_CmdHandlerPtr[ Cmd ]();
+		Boot_CmdHandlerPtr[ RxProtocolFrame->Cmd ]();
 	}
+
+	return finish_flag;
 }
 
 
 /* Private Functions  ---------------------------------------------------------*/
 static void Boot_CmdPingHandler( void )
 {
-	Boot_SendReply( 0u, 0u, OK );
+	Boot_SendCmd( 0u, 0u, OK );
 }
 
 static void Boot_CmdVersionHandler( void )
 {
 	uint32_t version = Ver_GetVersion();
 
-	Boot_SendReply( version, 4u, OK );
+	Boot_SendCmd( ( uint8_t* )version, 4u, OK );
 }
 
 static void Boot_CmdDeviceInfoHandler( void )
@@ -165,37 +162,14 @@ static void Boot_CmdUnlockHandler( void )
 
 static void Boot_CmdMcuResetHandler( void )
 {
-	Boot_SendReply( 0u, 0u, OK );
-	/* TODO: Wrap this function in Pal */
-	NVIC_SystemReset();
+	Boot_SendCmd( 0u, 0u, OK );
+	Mcu_Reset();
 }
 
 static void Boot_CmdJumpToAppHandler( void )
 {
-	/* TODO: Move this to PAL */
-	uint32_t appStack = *(volatile uint32_t*) BOOT_APP_START_ADDR;
-	uint32_t appResetHandler = *(volatile uint32_t*) (BOOT_APP_START_ADDR + 4);
-
-	HAL_RCC_DeInit();
-	HAL_DeInit();
-
-	/* Disable SysTick */
-	SysTick->CTRL = 0;
-	SysTick->LOAD = 0;
-	SysTick->VAL = 0;
-
-	/* Set vector table */
-	SCB->VTOR = BOOT_APP_START_ADDR;
-
-	/* Set Main Stack Pointer */
-	__set_MSP(appStack);
-
-	/* Send ACK */
-	Boot_SendReply( 0u, 0u, OK );
-
-	/* Jump to Reset Handler of App0 */
-	pAppRestHandler JumpToApplication = (pAppRestHandler) appResetHandler;
-	JumpToApplication();
+	Boot_SendCmd( 0u, 0u, OK );
+	Mcu_JumpToApp( BOOT_APP_START_ADDR );
 }
 
 

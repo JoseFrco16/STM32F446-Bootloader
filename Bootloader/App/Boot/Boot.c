@@ -6,6 +6,8 @@
 
 /* Includes ------------------------------------------------------------------ */
 #include "Boot.h"
+#include "Boot_AppHeaderFlags.h"
+#include "Boot_Protocol.h"
 #include "Boot_Handlers.h"
 #include "Gpio.h"
 
@@ -18,8 +20,7 @@
 /* Public variables ----------------------------------------------------------*/
 
 /* Private variables ---------------------------------------------------------*/
-/* Private RAM Variable stored in not initialized section */
-NO_INIT_SECTION uint8_t Boot_AppFlag;
+HEADER_SECTION Boot_HeaderFlagsType Boot_HeaderFlags;
 
 /* Private function prototypes -----------------------------------------------*/
 /**
@@ -30,11 +31,24 @@ static void Boot_LedSequence( void );
 /* Public Functions  ---------------------------------------------------------*/
 void Boot_ManageBootloader( void )
 {
+	Bool_Type boot_finish = False;
+	Boot_RxProtocolType* RxProtocol = NULL;
+
+	/* Initial Boot Led Sequence */
 	Boot_LedSequence();
 
-	if( Boot_AppFlag == True )
+	if( Boot_HeaderFlags.ota_flag == True )
 	{
-		Boot_ExecuteCmd( 0 );
+		do
+		{
+			Boot_LedSequence();
+			RxProtocol = Boot_ReadCmd();
+			boot_finish = Boot_ExecuteCmd( RxProtocol );
+
+		}
+		while( boot_finish == False );
+
+		Boot_HeaderFlags.ota_flag = False;
 	}
 }
 

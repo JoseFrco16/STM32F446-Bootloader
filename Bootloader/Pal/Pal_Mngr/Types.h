@@ -12,13 +12,13 @@
 
 /* Define --------------------------------------------------------------------*/
 #define NULL ((void *)0)
-#define NO_INIT_SECTION __attribute__( ( section( ".noinit" ) ) )
+#define HEADER_SECTION __attribute__((section(".header")))
 
 /* Enums -------------------------------------------------------------------*/
-enum{
+typedef enum{
 	False = 0,
 	True,
-};
+}Bool_Type;
 
 /* Typedef -------------------------------------------------------------------*/
 

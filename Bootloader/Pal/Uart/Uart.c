@@ -7,15 +7,11 @@
 /* Includes ------------------------------------------------------------------ */
 #include "Uart.h"
 #include <string.h>
-
 #include "stm32f4xx_hal.h"
 
 /* Define --------------------------------------------------------------------*/
-/* Typical values are 64, 128 or 256 bytes due to Flash write */
-#define UART_RX_BUFFER  128u
-#define UART_TX_BUFFER  64u
-#define UART_RX_TIMEOUT 5u
-#define UART_TX_TIMEOUT 5u
+#define UART_RX_TIMEOUT 1000u
+#define UART_TX_TIMEOUT 100u
 
 /* Typedef -------------------------------------------------------------------*/
 typedef struct{
@@ -50,23 +46,28 @@ void Uart_Init()
     }
 }
 
-Uart_StatusType Uart_ReadFrame( uint8_t* data_rx )
+Uart_StatusType Uart_ReadFrame( uint8_t* data_rx, uint8_t length )
 {
-	Uart_StatusType ret_status;
+	Uart_StatusType ret_status = UART_RX_NOK;
 	HAL_StatusTypeDef hal_status;
 
-	hal_status = HAL_UART_Receive(&Uart_Lv.huart2, Uart_Lv.rx, UART_RX_BUFFER, UART_RX_TIMEOUT);
+	if( length <= UART_RX_BUFFER )
+	{
+		memset(Uart_Lv.rx, 0, UART_RX_BUFFER);
 
-    if (hal_status == HAL_OK)
-    {
-        ret_status = UART_RX_OK;
-        data_rx = Uart_Lv.rx;
-    }
-    else
-    {
-    	ret_status = UART_RX_NOK;
-    	*data_rx = 0u;
-    }
+		hal_status = HAL_UART_Receive(&Uart_Lv.huart2, Uart_Lv.rx, length, UART_RX_TIMEOUT);
+
+	    if (hal_status == HAL_OK)
+	    {
+	        ret_status = UART_RX_OK;
+	        memcpy(data_rx, Uart_Lv.rx, length);
+	    }
+	    else
+	    {
+	    	ret_status = UART_RX_NOK;
+	    	data_rx = NULL;
+	    }
+	}
 
     return ret_status;
 }
@@ -82,8 +83,9 @@ Uart_StatusType Uart_WriteFrame( uint8_t* data_tx, uint8_t length )
 	}
 	else
 	{
-		memcpy(Uart_Lv.tx, data_tx, length);
-		hal_status = HAL_UART_Transmit(&Uart_Lv.huart2, Uart_Lv.tx, length, UART_TX_TIMEOUT);
+		memset(Uart_Lv.tx, 0, UART_TX_BUFFER);
+
+		hal_status = HAL_UART_Transmit(&Uart_Lv.huart2, data_tx, length, UART_TX_TIMEOUT);
 
 	    if (hal_status == HAL_OK)
 	    {

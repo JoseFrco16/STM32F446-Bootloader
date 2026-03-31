@@ -11,31 +11,20 @@
 /* Includes ------------------------------------------------------------------ */
 #include <stdint.h>
 #include "Types.h"
+#include "Boot_ProtocolTypes.h"
 
 /* Define --------------------------------------------------------------------*/
 
 /* Typedef -------------------------------------------------------------------*/
-typedef enum{
-	PING = 0,
-	BOOT_VERSION,
-	DEVICE_INFO,
-	ERASE_FLASH,
-	WRITE_FLASH,
-	COMPUTE_CRC,
-	AUTHENTICATE,
-	UNLOCK,
-	JUMP_TO_APPLICATION,
-	MCU_RESET,
-	CMD_TOTAL,
-}Boot_CmdType;
 
 /* Public variables ----------------------------------------------------------*/
 
 /* Public function prototypes ------------------------------------------------*/
 /*
  * @brief     Execute commands received though current interface
- * @param[in] Cmd Command to execute
+ * @param[in] RxProtocolFrame Bootloader Rx Protocol Frame
+ * @return    finish_flag Flag to indicate bootloader end
  */
-void Boot_ExecuteCmd( Boot_CmdType Cmd );
+uint8_t Boot_ExecuteCmd( Boot_RxProtocolType* RxProtocolFrame );
 
 #endif /* BOOT_HANDLERS__H */

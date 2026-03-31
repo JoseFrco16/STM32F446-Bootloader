@@ -24,4 +24,14 @@
  */
 void Mcu_Init();
 
+/**
+ * @brief Jump to the indicated address
+ */
+void Mcu_JumpToApp( uint32_t AppAddress );
+
+/**
+ * @brief Mcu reset
+ */
+void Mcu_Reset();
+
 #endif /* MCU__H */
