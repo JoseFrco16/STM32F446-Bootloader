@@ -1,33 +1,47 @@
-name: Build STM32 Bootloader/APP
+name: Build STM32 Bootloader/APP on Windows
 
 on:
   pull_request:
-    branches: [ main ]   # cuando el PR va hacia main
+    branches: [ main ]
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
 
     strategy:
       matrix:
         project: [APP0, Bootloader]
 
     steps:
-    - name: Checkout
+    - name: Checkout repository
       uses: actions/checkout@v4
 
     - name: Install ARM toolchain
       run: |
-        sudo apt-get update
-        sudo apt-get install -y gcc-arm-none-eabi make
+        choco install -y gcc-arm-none-eabi
+      shell: powershell
 
     - name: Build project
       run: |
-        cd ${{ matrix.project }}/Debug
-        make -j$(nproc)
+        cd ${{ matrix.project }}\Debug
+        # Clean last build
+        if (Test-Path "obj") { Remove-Item -Recurse -Force obj }
+        mingw32-make.exe
+      shell: powershell
 
-    - name: Upload firmware
+    - name: Generate BIN and HEX
+      run: |
+        cd ${{ matrix.project }}\Debug
+        arm-none-eabi-objcopy.exe -O binary *.elf firmware.bin
+        arm-none-eabi-objcopy.exe -O ihex *.elf firmware.hex
+      shell: powershell
+
+    - name: Upload firmware artifacts
       uses: actions/upload-artifact@v4
       with:
         name: firmware-${{ matrix.project }}
-        path: ${{ matrix.project }}/Debug/*.elf
+        path: |
+          ${{ matrix.project }}\Debug\*.elf
+          ${{ matrix.project }}\Debug\*.bin
+          ${{ matrix.project }}\Debug\*.hex
+          
