@@ -100,7 +100,7 @@ Boot_CmdHandler_t Boot_CmdHandlerPtr[ CMD_TOTAL ] =
 /* Public Functions  ---------------------------------------------------------*/
 uint8_t Boot_ExecuteCmd( Boot_RxProtocolType* RxProtocolFrame )
 {
-	uint8_t finish_flag = False;
+	uint8_t finish_flag = True;
 
 	if( ( RxProtocolFrame == NULL ) ||
 		( RxProtocolFrame->Cmd >= CMD_TOTAL ) ||

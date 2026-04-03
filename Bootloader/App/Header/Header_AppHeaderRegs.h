@@ -1,30 +1,31 @@
 /**
  ******************************************************************************
- * @file       Types.h
- *             Common types
+ * @file       Header_AppHeaderRegs.h
+ * @brief      Application header registers
  * @name       JoseFrco16
  *******************************************************************************/
 
-#ifndef TYPES__H
-#define TYPES__H
+#ifndef HEADER_APPHEADERFLAGS__H
+#define HEADER_APPHEADERFLAGS__H
 
 /* Includes ------------------------------------------------------------------ */
+#include <stdint.h>
 
 /* Define --------------------------------------------------------------------*/
-#define NULL ((void *)0)
-
-/* Enums -------------------------------------------------------------------*/
-typedef enum{
-	False = 0,
-	True,
-}Bool_Type;
 
 /* Typedef -------------------------------------------------------------------*/
+typedef struct
+{
+	uint32_t ota_flag;
+    uint32_t magic;
+    uint32_t size;
+    uint32_t crc;
+    uint32_t version;
+} Header_RegsType;
 
 /* Public variables ----------------------------------------------------------*/
 
-/* Public Functions  ---------------------------------------------------------*/
+/* Public function prototypes ------------------------------------------------*/
 
-/* Private Functions  ---------------------------------------------------------*/
 
-#endif /* TYPES__H */
+#endif /* HEADER_APPHEADERFLAGS__H */

@@ -1,14 +1,12 @@
 /**
  ******************************************************************************
- * @file       Boot.c
+ * @file       Header.c
  * @name       JoseFrco16
  *******************************************************************************/
 
 /* Includes ------------------------------------------------------------------ */
-#include "Boot.h"
-#include "Boot_Protocol.h"
-#include "Boot_Handlers.h"
-#include "Gpio.h"
+#include "Header.h"
+#include "Header_AppHeaderRegs.h"
 
 /* Define --------------------------------------------------------------------*/
 
@@ -19,41 +17,15 @@
 /* Public variables ----------------------------------------------------------*/
 
 /* Private variables ---------------------------------------------------------*/
+Header_RegsType* Header_Regs = ( const Header_RegsType* )HEADER_APP_HEADER_START_ADDR;
 
 /* Private function prototypes -----------------------------------------------*/
-/**
- * @brief Bootloader user led sequence
- */
-static void Boot_LedSequence( void );
 
 /* Public Functions  ---------------------------------------------------------*/
-void Boot_ManageBootloader( void )
+uint32_t Header_GetMagicNumber( void )
 {
-	Bool_Type boot_finish = False;
-	Boot_RxProtocolType* RxProtocol = NULL;
-
-	/* Initial Boot Led Sequence */
-	Boot_LedSequence();
-
-	do
-	{
-		Boot_LedSequence();
-		RxProtocol = Boot_ReadCmd();
-		boot_finish = Boot_ExecuteCmd( RxProtocol );
-
-	}
-	while( boot_finish == False );
+	return Header_Regs->magic;
 }
 
 /* Private Functions  ---------------------------------------------------------*/
-static void Boot_LedSequence( void )
-{
-	for (int time = 100; time > 0; time -= 10)
-	{
-		Gpio_SetPin( USER_LED, HIGH );
-		HAL_Delay(time);
-		Gpio_SetPin( USER_LED, LOW );
-		HAL_Delay(time);
-	}
-}
 
