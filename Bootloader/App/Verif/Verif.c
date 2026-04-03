@@ -1,16 +1,16 @@
 /**
  ******************************************************************************
- * @file       Boot.c
+ * @file       Verif.c
  * @name       JoseFrco16
  *******************************************************************************/
 
 /* Includes ------------------------------------------------------------------ */
-#include "Boot.h"
-#include "Boot_Protocol.h"
-#include "Boot_Handlers.h"
-#include "Gpio.h"
+#include "Verif.h"
+#include "Header.h"
 
 /* Define --------------------------------------------------------------------*/
+#define VERIF_INVALID_FLASH_MASK 0xFF000000u
+#define VERIF_VALID_FLASH_ORIGIN 0x08000000u
 
 /* Enum  ----------------------------------------------------------------------*/
 
@@ -21,39 +21,24 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* Private function prototypes -----------------------------------------------*/
-/**
- * @brief Bootloader user led sequence
- */
-static void Boot_LedSequence( void );
 
 /* Public Functions  ---------------------------------------------------------*/
-void Boot_ManageBootloader( void )
+Verif_ValidType Verif_CheckAppValidity( void )
 {
-	Bool_Type boot_finish = False;
-	Boot_RxProtocolType* RxProtocol = NULL;
+	Bool_Type app_validity = True;
+	uint32_t reset_handler = *( uint32_t* )HEADER_APP_START_ADDR;
 
-	/* Initial Boot Led Sequence */
-	Boot_LedSequence();
-
-	do
+	if( HEADER_MAGIC_NUMBER != Header_GetMagicNumber() )
 	{
-		Boot_LedSequence();
-		RxProtocol = Boot_ReadCmd();
-		boot_finish = Boot_ExecuteCmd( RxProtocol );
-
+		app_validity = False;
 	}
-	while( boot_finish == False );
+	else if( ( reset_handler & VERIF_INVALID_FLASH_MASK ) != VERIF_VALID_FLASH_ORIGIN )
+	{
+		app_validity = False;
+	}
+
+	return app_validity;
 }
 
 /* Private Functions  ---------------------------------------------------------*/
-static void Boot_LedSequence( void )
-{
-	for (int time = 100; time > 0; time -= 10)
-	{
-		Gpio_SetPin( USER_LED, HIGH );
-		HAL_Delay(time);
-		Gpio_SetPin( USER_LED, LOW );
-		HAL_Delay(time);
-	}
-}
 
