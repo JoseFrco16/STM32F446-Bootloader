@@ -1,0 +1,33 @@
+name: Build STM32 Bootloader/APP
+
+on:
+  pull_request:
+    branches: [ main ]   # cuando el PR va hacia main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        project: [APP0, Bootloader]
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: Install ARM toolchain
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y gcc-arm-none-eabi make
+
+    - name: Build project
+      run: |
+        cd ${{ matrix.project }}/Debug
+        make -j$(nproc)
+
+    - name: Upload firmware
+      uses: actions/upload-artifact@v4
+      with:
+        name: firmware-${{ matrix.project }}
+        path: ${{ matrix.project }}/Debug/*.elf
