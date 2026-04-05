@@ -68,8 +68,8 @@ all: main-build
 main-build: Bootloader.elf secondary-outputs
 
 # Tool invocations
-Bootloader.elf Bootloader.map: $(OBJS) $(USER_OBJS) C:\Users\josem\Documents\4_Autodidacta\2_Programacion\1_uC\stm32\Wks_cubeIde\STM32F446-Bootloader\Bootloader\Hal\STM32F446RETX.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-gcc -o "Bootloader.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"C:\Users\josem\Documents\4_Autodidacta\2_Programacion\1_uC\stm32\Wks_cubeIde\STM32F446-Bootloader\Bootloader\Hal\STM32F446RETX.ld" --specs=nosys.specs -Wl,-Map="Bootloader.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+Bootloader.elf Bootloader.map: $(OBJS) $(USER_OBJS)../Hal/STM32F446RETX.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-gcc -o "Bootloader.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"../Hal/STM32F446RETX.ld" --specs=nosys.specs -Wl,-Map="Bootloader.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 
