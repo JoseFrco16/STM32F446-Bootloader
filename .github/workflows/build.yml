@@ -1,4 +1,4 @@
-name: Build STM32 Bootloader/APP on Windows
+name: Build STM32 Bootloader/APP
 
 on:
   pull_request:
@@ -6,48 +6,26 @@ on:
 
 jobs:
   build:
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
 
     strategy:
       matrix:
         project: [APP0, Bootloader]
 
     steps:
-    - name: Checkout repository
+    - name: Checkout
       uses: actions/checkout@v4
 
-    - name: Download ARM GCC Toolchain
-      run: |
-        Invoke-WebRequest -Uri https://developer.arm.com/-/media/Files/downloads/gnu-rm/12.2-2023.05/gcc-arm-none-eabi-12.2-2023.05-win32.zip -OutFile gcc-arm-none-eabi.zip
-        Expand-Archive gcc-arm-none-eabi.zip -DestinationPath C:\arm-gcc
-      shell: powershell
-
-    - name: Add ARM Toolchain to PATH
-      run: |
-        $env:Path = "C:\arm-gcc\gcc-arm-none-eabi-12.2-2023.05\bin;" + $env:Path
-        echo "PATH updated"
-      shell: powershell
-
     - name: Build project
-      run: |
-        cd ${{ matrix.project }}\Debug
-        # Clean build project
-        if (Test-Path "obj") { Remove-Item -Recurse -Force obj }
-        mingw32-make.exe
-      shell: powershell
+      uses: xanderhendriks/action-build-stm32cubeide@v15.0
+      with:
+        project-path: ${{ matrix.project }}
+        project-target: '${{ matrix.project }}/Debug'
 
-    - name: Generate BIN and HEX
-      run: |
-        cd ${{ matrix.project }}\Debug
-        arm-none-eabi-objcopy.exe -O binary *.elf firmware.bin
-        arm-none-eabi-objcopy.exe -O ihex *.elf firmware.hex
-      shell: powershell
-
-    - name: Upload firmware artifacts
+    - name: Upload firmware
       uses: actions/upload-artifact@v4
       with:
         name: firmware-${{ matrix.project }}
-        path: |
-          ${{ matrix.project }}\Debug\*.elf
-          ${{ matrix.project }}\Debug\*.bin
-          ${{ matrix.project }}\Debug\*.hex
+        path: | 
+          ${{ matrix.project }}/Debug/*.elf
+          ${{ matrix.project }}/Debug/*.bin
