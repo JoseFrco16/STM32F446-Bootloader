@@ -18,8 +18,9 @@ jobs:
 
     - name: Install ARM toolchain
       run: |
-        sudo apt-get update
-        sudo apt-get install -y gcc-arm-none-eabi make
+        wget https://developer.arm.com/-/media/Files/downloads/gnu-rm/13.3-2023.05/gcc-arm-none-eabi-13.3-2023.05-x86_64-linux.tar.bz2
+        tar -xjf gcc-arm-none-eabi-13.3-2023.05-x86_64-linux.tar.bz2
+        echo "$PWD/gcc-arm-none-eabi-13.3-2023.05/bin" >> $GITHUB_PATH
 
     - name: Build project
       run: |
