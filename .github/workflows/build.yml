@@ -25,7 +25,7 @@ jobs:
       run: |
         cd ${{ matrix.project }}/Debug
         make clean
-        make -j$(nproc)
+        make all
 
     - name: Generate BIN and HEX
       run: |
