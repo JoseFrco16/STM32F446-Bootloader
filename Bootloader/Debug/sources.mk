@@ -1,0 +1,36 @@
+################################################################################
+# Automatically-generated file. Do not edit!
+# Toolchain: GNU Tools for STM32 (13.3.rel1)
+################################################################################
+
+ELF_SRCS := 
+OBJ_SRCS := 
+S_SRCS := 
+C_SRCS := 
+S_UPPER_SRCS := 
+O_SRCS := 
+CYCLO_FILES := 
+SIZE_OUTPUT := 
+OBJDUMP_LIST := 
+SU_FILES := 
+EXECUTABLES := 
+OBJS := 
+MAP_FILES := 
+S_DEPS := 
+S_UPPER_DEPS := 
+C_DEPS := 
+
+# Every subdirectory with source files must be described here
+SUBDIRS := \
+App/Boot \
+App/Header \
+App/Main \
+App/Verif \
+Hal/Startup/Src \
+Hal/Stm32_Drivers/STM32F4xx_HAL_Driver/Src \
+Hal/Stm32_System/Src/System \
+Pal/Gpio \
+Pal/Mcu \
+Pal/Pal_Mngr \
+Pal/Uart \
+
