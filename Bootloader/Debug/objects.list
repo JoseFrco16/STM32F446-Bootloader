@@ -4,6 +4,7 @@
 "./App/Header/Header.o"
 "./App/Main/App_main.o"
 "./App/Main/Ver.o"
+"./App/Ota/Ota.o"
 "./App/Verif/Verif.o"
 "./Hal/Startup/Src/startup_stm32f446retx.o"
 "./Hal/Stm32_Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal.o"

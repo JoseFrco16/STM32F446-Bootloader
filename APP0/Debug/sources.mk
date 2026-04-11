@@ -24,6 +24,7 @@ C_DEPS :=
 SUBDIRS := \
 App/Boot \
 App/Main \
+App/Ota \
 Hal/Startup/Src \
 Hal/Stm32_Drivers/STM32F4xx_HAL_Driver/Src \
 Hal/Stm32_System/Src/System \

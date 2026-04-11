@@ -1,55 +1,29 @@
 /**
  ******************************************************************************
- * @file       App_main.c
- * @brief      Main application file
+ * @file       Ota.c
  * @name       JoseFrco16
  *******************************************************************************/
 
 /* Includes ------------------------------------------------------------------ */
-#include "Pal_Mngr.h"
+#include "Ota.h"
 
 /* Define --------------------------------------------------------------------*/
+
+/* Enum  ----------------------------------------------------------------------*/
 
 /* Typedef -------------------------------------------------------------------*/
 
 /* Public variables ----------------------------------------------------------*/
 
 /* Private variables ---------------------------------------------------------*/
-/**
- * @brief Led sequence of application
- */
-void App_LedSequence( void );
 
 /* Private function prototypes -----------------------------------------------*/
 
-/* Function definitions ------------------------------------------------------*/
-
-/**
- * @brief  Application's entry point.
- * @retval int
- */
-int main(void)
+/* Public Functions  ---------------------------------------------------------*/
+void Ota_CopyFlashFromOtaToApp( void )
 {
-	/* Reset of all peripherals, Initializes the Flash interface and the Systick. */
-	Pal_Init();
 
-	while (1)
-	{
-		App_LedSequence();
-
-		if( Uart_GetIrqStatusFlag() == UART_RX_OK )
-		{
-			Boot_CheckBootRequest();
-		}
-	}
-
-	return 0;
 }
 
-void App_LedSequence( void )
-{
-	Gpio_SetPin( USER_LED, HIGH );
-	Timer_Delay(1000);
-	Gpio_SetPin( USER_LED, LOW );
-	Timer_Delay(1000);
-}
+/* Private Functions  ---------------------------------------------------------*/
+

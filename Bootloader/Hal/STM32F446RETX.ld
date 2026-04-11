@@ -49,6 +49,7 @@ MEMORY
   FLASH_BOOT          (r)    : ORIGIN = 0x8000000,   LENGTH = 32K
   FLASH_APP_HEADER    (rx)   : ORIGIN = 0x8008000,   LENGTH = 1K
   FLASH_APP           (rx)   : ORIGIN = 0x8008400,   LENGTH = 31K
+  FLASH_OTA           (r)   : ORIGIN = 0x8010000,   LENGTH = 32K
 }
 
 /* Sections */

@@ -1,12 +1,13 @@
 /**
  ******************************************************************************
- * @file       Boot.h
- * @brief      Manage jump to bootloader
+ * @file       Ota.h
+ * @brief      Over-The-Air (OTA)
+ * @details    Remote embedded software update through OTA.
  * @name       JoseFrco16
  *******************************************************************************/
 
-#ifndef BOOT__H
-#define BOOT__H
+#ifndef OTA__H
+#define OTA__H
 
 /* Includes ------------------------------------------------------------------ */
 #include <stdint.h>
@@ -16,16 +17,17 @@
 /* Define --------------------------------------------------------------------*/
 
 /* Typedef -------------------------------------------------------------------*/
+typedef enum{
+	UART,
+}Ota_InterfaceType;
 
 /* Public variables ----------------------------------------------------------*/
 
 /* Public function prototypes ------------------------------------------------*/
+
 /**
- * @brief Check bootloader request
- *        The application reset MCU in case of bootloader request
+ * @brief Copy Flash from OTA to APP region
  */
-void Boot_CheckBootRequest( void );
+void Ota_CopyFlashFromOtaToApp( void );
 
-
-
-#endif /* BOOT__H */
+#endif /* OTA__H */
