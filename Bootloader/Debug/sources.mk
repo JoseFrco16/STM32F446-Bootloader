@@ -25,6 +25,7 @@ SUBDIRS := \
 App/Boot \
 App/Header \
 App/Main \
+App/Ota \
 App/Verif \
 Hal/Startup/Src \
 Hal/Stm32_Drivers/STM32F4xx_HAL_Driver/Src \
