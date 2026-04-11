@@ -58,4 +58,12 @@ dkms.conf
 */.settings/*
 
 # Wks settings  
-.metadata/*
+.metadata/*  
+
+# Build environment  
+*.launch
+*.list
+
+# Output files  
+*/Debug/*/*/*.cyclo
+*/Debug/*/*/*/*/*.cyclo
