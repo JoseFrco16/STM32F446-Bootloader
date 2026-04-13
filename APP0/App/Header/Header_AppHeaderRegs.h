@@ -1,33 +1,33 @@
 /**
  ******************************************************************************
- * @file       Ver.h
- * @brief      Version module manager
+ * @file       Header_AppHeaderRegs.h
+ * @brief      Application header registers
  * @name       JoseFrco16
  *******************************************************************************/
 
-#ifndef VER__H
-#define VER__H
+#ifndef HEADER_APPHEADERFLAGS__H
+#define HEADER_APPHEADERFLAGS__H
 
 /* Includes ------------------------------------------------------------------ */
 #include <stdint.h>
 
 /* Define --------------------------------------------------------------------*/
-#define FW_VERSION_MAJOR   1
-#define FW_VERSION_MINOR   0
-#define FW_VERSION_PATCH   0
-
-#define FW_VERSION_U32 ((FW_VERSION_MAJOR << 16) | \
-                        (FW_VERSION_MINOR << 8)  | \
-                        (FW_VERSION_PATCH))
+/* Application's magic number */
+#define HEADER_MAGIC_NUMBER 0xF00Du
 
 /* Typedef -------------------------------------------------------------------*/
+typedef struct
+{
+	uint32_t ota_flag;
+    uint32_t magic;
+    uint32_t size;
+    uint32_t crc;
+    uint32_t version;
+} Header_RegsType;
 
 /* Public variables ----------------------------------------------------------*/
 
 /* Public function prototypes ------------------------------------------------*/
-/*
- * @brief Get project version
- */
-uint32_t Ver_GetVersion( void );
 
-#endif /* VER__H */
+
+#endif /* HEADER_APPHEADERFLAGS__H */

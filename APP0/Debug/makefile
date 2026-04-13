@@ -19,6 +19,7 @@ RM := rm -rf
 -include Hal/Startup/Src/subdir.mk
 -include App/Ota/subdir.mk
 -include App/Main/subdir.mk
+-include App/Header/subdir.mk
 -include App/Boot/subdir.mk
 -include objects.mk
 
@@ -68,8 +69,8 @@ all: main-build
 main-build: APP0.elf secondary-outputs
 
 # Tool invocations
-APP0.elf APP0.map: $(OBJS) $(USER_OBJS) ../Hal/STM32F446RETX.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-gcc -o "APP0.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"../Hal/STM32F446RETX.ld" --specs=nosys.specs -Wl,-Map="APP0.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+APP0.elf APP0.map: $(OBJS) $(USER_OBJS) C:\Users\josem\Documents\4_Autodidacta\2_Programacion\1_uC\stm32\Wks_cubeIde\STM32F446-Bootloader\APP0\Hal\STM32F446RETX.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-gcc -o "APP0.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"C:\Users\josem\Documents\4_Autodidacta\2_Programacion\1_uC\stm32\Wks_cubeIde\STM32F446-Bootloader\APP0\Hal\STM32F446RETX.ld" --specs=nosys.specs -Wl,-Map="APP0.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 

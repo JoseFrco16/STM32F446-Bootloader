@@ -7,7 +7,6 @@
 /* Includes ------------------------------------------------------------------ */
 #include "Boot.h"
 #include "Boot_ProtocolTypes.h"
-#include "Boot_AppHeaderFlags.h"
 #include "Mcu.h"
 
 /* Define --------------------------------------------------------------------*/
@@ -20,14 +19,6 @@
 
 /* Private variables ---------------------------------------------------------*/
 Boot_RxProtocolType Boot_RxProtocol;
-HEADER_SECTION Boot_HeaderFlagsType Boot_HeaderFlags =
-{
-	.ota_flag = False,
-    .magic   = BOOT_MAGIC_NUMBER,
-    .size    = 0u,
-    .crc     = 0u,
-    .version = 0u
-};
 
 /* Private function prototypes -----------------------------------------------*/
 /**
@@ -47,7 +38,6 @@ void Boot_CheckBootRequest( void )
 {
 	if( Boot_IsPingCmd() == True )
 	{
-		Boot_HeaderFlags.ota_flag = True;
 		Boot_SendAckCmd();
 		Mcu_Reset();
 	}

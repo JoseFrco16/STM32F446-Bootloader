@@ -23,6 +23,7 @@ C_DEPS :=
 # Every subdirectory with source files must be described here
 SUBDIRS := \
 App/Boot \
+App/Header \
 App/Main \
 App/Ota \
 Hal/Startup/Src \
