@@ -1,27 +1,39 @@
 /**
  ******************************************************************************
- * @file       Ver.c
+ * @file       Header.c
  * @name       JoseFrco16
  *******************************************************************************/
 
 /* Includes ------------------------------------------------------------------ */
+#include "Header.h"
+#include "Header_AppHeaderRegs.h"
 #include "Ver.h"
 
 /* Define --------------------------------------------------------------------*/
 
+/* Enum  ----------------------------------------------------------------------*/
+
 /* Typedef -------------------------------------------------------------------*/
 
-/* Public variables ---------------------------------------------------------*/
-static uint32_t Ver_FwVersion = FW_VERSION_U32;
+/* Public variables ----------------------------------------------------------*/
 
 /* Private variables ---------------------------------------------------------*/
+HEADER_SECTION const Header_RegsType Header_Regs =
+{
+	.ota_flag = 0u,
+	.magic = HEADER_MAGIC_NUMBER,
+	.size = 0u,
+	.crc = 0u,
+	.version = FW_VERSION_U32,
+};
 
 /* Private function prototypes -----------------------------------------------*/
 
 /* Public Functions  ---------------------------------------------------------*/
-uint32_t Ver_GetVersion( void )
+void Header_SetOtaFlag( void )
 {
-	return ( uint32_t )Ver_FwVersion;
+	// Write flash
 }
 
 /* Private Functions  ---------------------------------------------------------*/
+

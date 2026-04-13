@@ -1,4 +1,5 @@
 "./App/Boot/Boot.o"
+"./App/Header/Header.o"
 "./App/Main/App_main.o"
 "./App/Main/Ver.o"
 "./App/Ota/Ota.o"

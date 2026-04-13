@@ -19,6 +19,7 @@ RM := rm -rf
 -include Hal/Startup/Src/subdir.mk
 -include App/Ota/subdir.mk
 -include App/Main/subdir.mk
+-include App/Header/subdir.mk
 -include App/Boot/subdir.mk
 -include objects.mk
 
