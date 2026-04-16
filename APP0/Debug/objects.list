@@ -23,6 +23,7 @@
 "./Hal/Stm32_System/Src/System/syscalls.o"
 "./Hal/Stm32_System/Src/System/sysmem.o"
 "./Hal/Stm32_System/Src/System/system_stm32f4xx.o"
+"./Pal/Flash/Flash.o"
 "./Pal/Gpio/Gpio.o"
 "./Pal/Mcu/Mcu.o"
 "./Pal/Mcu/Mcu_Irq.o"
