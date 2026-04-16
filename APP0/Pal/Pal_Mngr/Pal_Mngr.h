@@ -13,6 +13,7 @@
 #include "Gpio.h"
 #include "Mcu.h"
 #include "Uart.h"
+#include "Flash.h"
 #include "Timer.h"
 
 /* Define --------------------------------------------------------------------*/
