@@ -29,6 +29,7 @@ App/Ota \
 Hal/Startup/Src \
 Hal/Stm32_Drivers/STM32F4xx_HAL_Driver/Src \
 Hal/Stm32_System/Src/System \
+Pal/Flash \
 Pal/Gpio \
 Pal/Mcu \
 Pal/Pal_Mngr \

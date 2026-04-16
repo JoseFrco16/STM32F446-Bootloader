@@ -14,6 +14,7 @@ RM := rm -rf
 -include Pal/Pal_Mngr/subdir.mk
 -include Pal/Mcu/subdir.mk
 -include Pal/Gpio/subdir.mk
+-include Pal/Flash/subdir.mk
 -include Hal/Stm32_System/Src/System/subdir.mk
 -include Hal/Stm32_Drivers/STM32F4xx_HAL_Driver/Src/subdir.mk
 -include Hal/Startup/Src/subdir.mk

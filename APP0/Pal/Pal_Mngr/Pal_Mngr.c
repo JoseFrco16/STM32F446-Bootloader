@@ -22,7 +22,7 @@ void Pal_Init()
 {
 	/* Reset of all peripherals, Initializes the Flash interface and the Systick. */
 	Mcu_Init();
-
+	Flash_Init();
 	Gpio_Init();
 	Uart_Init();
 }
