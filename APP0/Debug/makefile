@@ -100,7 +100,7 @@ clean:
 	-@echo ' '
 
 post-build:
-	python ../post_build.py -ap="./Debug" -an="APP0"
+	python ../post_build.py -ap="../Debug" -an="APP0"
 	-@echo ' '
 
 secondary-outputs: $(SIZE_OUTPUT) $(OBJDUMP_LIST) $(OBJCOPY_BIN)
